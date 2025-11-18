@@ -1,6 +1,11 @@
+import org.junit.jupiter.api.Assertions;
+
 import java.util.*;
 
 public class Main {
+    public static int[] numbers = {4, 10, 3, 18, 22, 55, 10, 0, 0, 0};
+    public static int[] numbersTwo = {20, 5, 11};
+
     public static void main(String[] args) {
         //Nothing in the main method will be tested
     }
@@ -20,7 +25,10 @@ public class Main {
      * @return An array of integers with two elements, the largest and smallest from the method parameter
      */
     public static int[] findLargestAndSmallest(int[] array) {
+        int largestNumber = Arrays.stream(array).max().getAsInt();
+        int smallestNumber = Arrays.stream(array).min().getAsInt();
 
+        return new int[]{smallestNumber, largestNumber};
     }
 
 
@@ -38,8 +46,17 @@ public class Main {
      * @param array An array of ints that may or may not include duplicates
      * @return An array of ints that doesn't contain duplicates.
      */
-    public static Object[] removeDuplicatesFromArray(int[] array) {
+    public static Integer[] removeDuplicatesFromArray(int[] array) {
+        TreeSet<Integer> uniqueNumbersSet = new TreeSet<>();
+        System.out.println(uniqueNumbersSet);
 
+        for (int number : array) {
+            uniqueNumbersSet.add(number);
+        }
+
+        System.out.println(uniqueNumbersSet);
+
+        return uniqueNumbersSet.toArray(new Integer[0]);
     }
 
     /**
@@ -54,7 +71,23 @@ public class Main {
      * @return Sum of the two largest values
      */
     public static int sumOfTwoLargest(int[] array) {
+        if (array.length == 0) { // empty array
+            return 0;
+        } else if (array.length == 1) {
+            return array[0];
+        } else {
+            for (int _i = 0; _i < array.length - 1; _i++) {
+                if (array[_i] < array[_i + 1]) {
+                    int tempValue = array[_i];
+                    array[_i] = array[_i + 1];
+                    array[_i + 1] = tempValue;
 
+                    _i = -1;
+                }
+            }
+
+            return array[0] + array[1];
+        }
     }
 
     //BONUS QUESTION IS BELOW
@@ -80,6 +113,10 @@ public class Main {
      * @return Array of sorted integers, merged from array1 and array2
      */
     public static int[] mergeSortedArrays(int[] array1, int[] array2) {
-        return null;
+        Arrays.sort(array1);
+        System.arraycopy(array2, 0, array1, 0, array2.length);
+        Arrays.sort(array1);
+
+        return array1;
     }
 }
