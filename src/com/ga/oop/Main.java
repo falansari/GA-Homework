@@ -7,5 +7,8 @@ public class Main {
 
         Circle circle = new Circle(4);
         System.out.println("Circle CIRCUMFERENCE: " + circle.getCircumference() + ", AREA: " + circle.getArea());
+
+        Rectangle rectangle = new Rectangle(4, 5);
+        System.out.println("Rectangle CIRCUMFERENCE: " + rectangle.getCircumference() + ", AREA: " + rectangle.getArea());
     }
 }
