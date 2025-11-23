@@ -8,6 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
         //Nothing in the main method will be tested
+        System.out.println(Arrays.toString(findLargestAndSmallest(numbers)));
+        System.out.println(Arrays.toString(findLargestAndSmallest(numbersTwo)));
     }
 
     /**
@@ -25,8 +27,16 @@ public class Main {
      * @return An array of integers with two elements, the largest and smallest from the method parameter
      */
     public static int[] findLargestAndSmallest(int[] array) {
-        int largestNumber = Arrays.stream(array).max().getAsInt();
-        int smallestNumber = Arrays.stream(array).min().getAsInt();
+        int largestNumber = array[0];
+        int smallestNumber = array[0];
+
+        for (int _i = 1; _i < array.length; _i++) {
+            if (array[_i] <  smallestNumber) {
+                smallestNumber = array[_i];
+            } else if (array[_i] > largestNumber) {
+                largestNumber = array[_i];
+            }
+        }
 
         return new int[]{smallestNumber, largestNumber};
     }
