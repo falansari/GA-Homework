@@ -16,13 +16,15 @@ public class Main {
 
     private <E> void printList(List<E> list) {
         // TODO Print out all the elements in the supplied list:
+        list.forEach(System.out::println);
 
     }
 
-    public void getEmployeesOver50k() {
+    public void getEmployeesOver50k(List<Employee> employees) {
         // TODO Print a list of all employees that earn $50,000 or more
-        List<Employee> employees = null;
-        // printList(employees);
+        employees.stream()
+                .filter(e -> e.getSalary() > 50000)
+                .forEach(System.out::println);
     }
 
     public void getEmployeeNamesHiredAfter2012() {
@@ -60,6 +62,12 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        Main main = new Main();
 
+        System.out.println("Complete Employee List:");
+        main.printList(main.employees);
+        System.out.println(" ");
+        System.out.println("Employees with salaries over 50K:");
+        main.getEmployeesOver50k(main.employees);
     }
 }
