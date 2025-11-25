@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,14 +42,16 @@ public class Main {
 
     public void getMaxSalary() {
         // TODO Print the maximum salary of all employees...
-        double max = 0;
-        System.out.println("Max:" + max);
+        double max = employees.stream()
+                        .mapToDouble(Employee::getSalary).max().getAsDouble();
+        System.out.println("Max: " + max);
     }
 
     public void getMinSalary() {
         // TODO Print the minimum salary of all employees...
-        double min = 0;
-        System.out.println("Min:" + min);
+        double min = employees.stream()
+                .mapToDouble(Employee::getSalary).min().getAsDouble();
+        System.out.println("Min: " + min);
     }
 
     public void getAverageSalaries() {
@@ -77,5 +80,8 @@ public class Main {
         System.out.println(" ");
         System.out.println("Names of employees hired after 2012:");
         main.getEmployeeNamesHiredAfter2012();
+        System.out.println(" ");
+        main.getMaxSalary();
+        main.getMinSalary();
     }
 }
