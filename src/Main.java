@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -31,9 +32,8 @@ public class Main {
     public void getEmployeeNamesHiredAfter2012() {
         // TODO Print a list of the names (not the Employee instances) of all employees who were hired on or after Jan. 1, 2012:
         // HINT: look it up for "LocalDate.of"
-        Main main = new Main();
         List<String> employees =
-                main.employees.stream()
+                this.employees.stream()
                         .filter(e -> e.getHireDate().isAfter(LocalDate.of(2011, 12, 31)))
                         .map(Employee::getName)
                         .toList();
@@ -43,21 +43,25 @@ public class Main {
     public void getMaxSalary() {
         // TODO Print the maximum salary of all employees...
         double max = employees.stream()
-                        .mapToDouble(Employee::getSalary).max().getAsDouble();
+                        .mapToDouble(Employee::getSalary).max().orElse(0);
         System.out.println("Max: " + max);
     }
 
     public void getMinSalary() {
         // TODO Print the minimum salary of all employees...
         double min = employees.stream()
-                .mapToDouble(Employee::getSalary).min().getAsDouble();
+                .mapToDouble(Employee::getSalary).min().orElse(0);
         System.out.println("Min: " + min);
     }
 
     public void getAverageSalaries() {
         // TODO print the average salary of all Female and Male employees:
-        double averageFemale = 0;
-        double averageMale = 0;
+        double averageFemale = employees.stream()
+                .filter(e -> Objects.equals(e.getGender(), "Female"))
+                .mapToDouble(Employee::getSalary).average().orElse(0);
+        double averageMale = employees.stream()
+                .filter(e -> Objects.equals(e.getGender(), "Male"))
+                .mapToDouble(Employee::getSalary).average().orElse(0);
 
         System.out.println("Averages: Female:" + averageFemale);
         System.out.println("Averages: Male:" + averageMale);
@@ -83,5 +87,7 @@ public class Main {
         System.out.println(" ");
         main.getMaxSalary();
         main.getMinSalary();
+        System.out.println(" ");
+        main.getAverageSalaries();
     }
 }

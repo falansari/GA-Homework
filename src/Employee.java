@@ -32,6 +32,8 @@ public class Employee {
         return salary;
     }
 
+    public String getGender() { return gender; }
+
     @Override
     public String toString() {
         return "Employee{" +
