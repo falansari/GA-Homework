@@ -69,8 +69,10 @@ public class Main {
 
     public void getMaximumPaidEmployee() {
         // TODO use the reduce() operation to find the Employee instance of the employees list with the highest salary:
-        Employee highest = null;
-        // System.out.println(highest);
+        Employee highest = employees.stream()
+                .reduce((e1, e2) -> e1.getSalary() > e2.getSalary() ? e1 : e2)
+                .orElse(null);
+        System.out.println("Highest paid employee: " + highest);
     }
 
     public static void main(String[] args) {
@@ -89,5 +91,7 @@ public class Main {
         main.getMinSalary();
         System.out.println(" ");
         main.getAverageSalaries();
+        System.out.println(" ");
+        main.getMaximumPaidEmployee();
     }
 }
