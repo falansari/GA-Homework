@@ -30,8 +30,13 @@ public class Main {
     public void getEmployeeNamesHiredAfter2012() {
         // TODO Print a list of the names (not the Employee instances) of all employees who were hired on or after Jan. 1, 2012:
         // HINT: look it up for "LocalDate.of"
-        List<String> employees = null;
-        // printList(employees);
+        Main main = new Main();
+        List<String> employees =
+                main.employees.stream()
+                        .filter(e -> e.getHireDate().isAfter(LocalDate.of(2011, 12, 31)))
+                        .map(Employee::getName)
+                        .toList();
+        printList(employees);
     }
 
     public void getMaxSalary() {
@@ -69,5 +74,8 @@ public class Main {
         System.out.println(" ");
         System.out.println("Employees with salaries over 50K:");
         main.getEmployeesOver50k(main.employees);
+        System.out.println(" ");
+        System.out.println("Names of employees hired after 2012:");
+        main.getEmployeeNamesHiredAfter2012();
     }
 }
