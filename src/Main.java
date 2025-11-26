@@ -70,7 +70,7 @@ public class Main {
     public void getMaximumPaidEmployee() {
         // TODO use the reduce() operation to find the Employee instance of the employees list with the highest salary:
         Employee highest = employees.stream()
-                .reduce((e1, e2) -> e1.getSalary() > e2.getSalary() ? e1 : e2)
+                .reduce((e1, e2) -> e1.getSalary() > e2.getSalary() ? e1 : e2)// ternary function to shortcut if/else statement
                 .orElse(null);
         System.out.println("Highest paid employee: " + highest);
     }
