@@ -22,8 +22,8 @@ SELECT C.*, L.*
 FROM country C
 INNER JOIN countrylanguage L
 	ON C.code = L.countrycode
-WHERE C.region = 'Southern Europe' -- Limit to only countries in souther europe
-AND L.language = 'Italian' -- Limit to only countries that speak italian
+WHERE C.region = 'Southern Europe' -- Limit to only countries in Southern Europe
+AND L.language = 'Italian' -- Limit to only countries that speak Italian
 AND C.code != 'VAT' -- Remove original country from result
 AND C.code IN (
 	SELECT countrycode
@@ -37,8 +37,12 @@ ORDER BY C.code;
  -- There are only two cities she could be flying to in the country. One is named the same as the country – that
  -- would be too obvious. We're following our gut on this one; find out what other city in that country she might
  --  be flying to.
-
-
+SELECT T.*
+FROM city T
+JOIN country C
+	ON C.code = T.countrycode
+WHERE C.code = 'SMR'
+AND T.name != C.name;
 
 -- Clue #5: Oh no, she pulled a switch – there are two cities with very similar names, but in totally different
 -- parts of the globe! She's headed to South America as we speak; go find a city whose name is like the one we were
