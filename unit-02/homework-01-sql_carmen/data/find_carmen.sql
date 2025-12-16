@@ -18,8 +18,20 @@ AND isofficial = true;
 -- Clue #3: We have new news on the classes Carmen attended – our gumshoes tell us she's moved on
 -- to a different country, a country where people speak only the language she was learning. Find out which
 --  nearby country speaks nothing but that language.
-
-
+SELECT C.*, L.*
+FROM country C
+INNER JOIN countrylanguage L
+	ON C.code = L.countrycode
+WHERE C.region = 'Southern Europe' -- Limit to only countries in souther europe
+AND L.language = 'Italian' -- Limit to only countries that speak italian
+AND C.code != 'VAT' -- Remove original country from result
+AND C.code IN (
+	SELECT countrycode
+	FROM countrylanguage L
+	GROUP BY L.countrycode
+	HAVING COUNT(L.language) = 1 -- Limit to countries that speak 1 language only
+)
+ORDER BY C.code;
 
 -- Clue #4: We're booking the first flight out – maybe we've actually got a chance to catch her this time.
  -- There are only two cities she could be flying to in the country. One is named the same as the country – that
