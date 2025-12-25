@@ -9,9 +9,11 @@ https://github.com/falansari/GA-Homework/tree/eeddfd5c48bd4945d7c21bfcbfbb3b1553
 
 ### Models
 - Getters are set for all columns, however setters are not added for id, createdAt and updatedAt columns, as these should be auto-set by the app only and should not be manually changeable.
+- A category has a One to Many relationship with items.
 
 ### Controllers
 - Using PATCH requests instead of PUT requests for update functions; this is to allow partially updating a record instead of having to pass in all fields every time.
+- Added an extra getItemsByCategory (all items list in a category) along with getItems (all items in database).
 
 ## What Went Right
 

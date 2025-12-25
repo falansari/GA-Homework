@@ -1,20 +1,21 @@
 package com.ga.todo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "categories")
+@Table(name = "items")
 @Getter
-public class Category {
+public class Item {
     @Column
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +29,15 @@ public class Category {
     @Setter
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category", orphanRemoval = true)
-    private List<Item> itemList;
+    @Column
+    @Setter
+    private LocalDate dueDate;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @Setter
+    private Category category;
 
     @Column
     @CreationTimestamp
