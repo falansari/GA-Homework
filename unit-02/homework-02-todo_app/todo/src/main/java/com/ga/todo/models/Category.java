@@ -1,5 +1,6 @@
 package com.ga.todo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "user")
 @Entity
 @Table(name = "categories")
 @Getter
@@ -30,6 +31,12 @@ public class Category {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category", orphanRemoval = true)
     private List<Item> itemList;
+
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     @Column
     @CreationTimestamp
