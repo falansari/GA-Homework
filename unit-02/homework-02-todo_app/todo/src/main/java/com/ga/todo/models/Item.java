@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "user")
 @Entity
 @Table(name = "items")
 @Getter
@@ -38,6 +38,12 @@ public class Item {
     @JoinColumn(name = "category_id")
     @Setter
     private Category category;
+
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     @Column
     @CreationTimestamp
