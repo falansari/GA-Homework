@@ -3,9 +3,12 @@ package com.ga.todo.services;
 import com.ga.todo.exceptions.InformationNotFoundException;
 import com.ga.todo.models.Category;
 import com.ga.todo.models.Item;
+import com.ga.todo.models.User;
 import com.ga.todo.repositories.CategoryRepository;
 import com.ga.todo.repositories.ItemRepository;
+import com.ga.todo.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,29 +28,36 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
+    public static User getCurrentLoggedInUser() {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        assert userDetails != null;
+        return userDetails.getUser();
+    }
+
     /**
-     * Get list of all items in database service.
+     * Get list of all items belonging to a user.
      * @return List
      */
     public List<Item> getItems() {
         System.out.println("Service calling getItems ==>");
 
-        return itemRepository.findAll();
+        return itemRepository.findByUserId(getCurrentLoggedInUser().getId());
     }
 
     /**
-     * Get list of all Items belonging to a specific category service.
+     * Get list of all Items belonging to a specific category service and user.
      * @param categoryId Long
      * @return List
      */
     public List<Item> getItemsByCategory(Long categoryId) {
         System.out.println("Service calling getItemsByCategory ==>");
 
-        return itemRepository.findByCategoryId(categoryId);
+        return itemRepository.findByCategoryIdAndUserId(categoryId, getCurrentLoggedInUser().getId());
     }
 
     /**
-     * Create a new item in database from object service.
+     * Create a new item in database from object service. Duplicate notes are allowed.
      * @param categoryId Long
      * @param item Item
      * @return Item
@@ -55,23 +65,28 @@ public class ItemService {
     public Item createItem(Long categoryId, Item item) {
         System.out.println("Service calling createItem ==>");
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InformationNotFoundException("Category with ID " + categoryId + " not found"));
+        Category category = categoryRepository.findByIdAndUserId(categoryId, getCurrentLoggedInUser().getId());
 
+        if (category == null) throw new InformationNotFoundException("Category with ID " + categoryId + " not found");
+
+        item.setUser(getCurrentLoggedInUser());
         item.setCategory(category);
         return itemRepository.save(item);
     }
 
     /**
-     * Get one item by its unique ID service.
+     * Get one item by its unique ID service. Prevents unauthorized access.
      * @param itemId Long
      * @return Item
      */
     public Item getItem(Long itemId) {
         System.out.println("Service calling getItem ==>");
 
-        return itemRepository.findById(itemId)
-                .orElseThrow(() -> new InformationNotFoundException("Item with ID " + itemId + " not found"));
+        Item item =  itemRepository.findByIdAndUserId(itemId, getCurrentLoggedInUser().getId());
+
+        if (item == null) throw new InformationNotFoundException("Item with ID " + itemId + " not found");
+
+        return item;
     }
 
     /**
@@ -82,8 +97,9 @@ public class ItemService {
     public Category getItemCategory(Long itemId) {
         System.out.println("Service calling getItemCategory ==>");
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new InformationNotFoundException("Item with ID " + itemId + " not found"));
+        Item item = itemRepository.findByIdAndUserId(itemId, getCurrentLoggedInUser().getId());
+
+        if (item == null) throw new InformationNotFoundException("Item with ID " + itemId + " not found");
 
         return item.getCategory();
     }
@@ -97,8 +113,9 @@ public class ItemService {
     public Item updateItem(Long itemId, Item object) {
         System.out.println("Service calling updateItem ==>");
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new InformationNotFoundException("Item with ID " + itemId + " not found"));
+        Item item = itemRepository.findByIdAndUserId(itemId, getCurrentLoggedInUser().getId());
+
+        if (item == null) throw new InformationNotFoundException("Item with ID " + itemId + " not found");
 
         if (object.getName() != null) item.setName(object.getName());
         if (object.getDescription() != null) item.setDescription(object.getDescription());
@@ -115,8 +132,9 @@ public class ItemService {
     public void deleteItem(Long itemId) {
         System.out.println("Service calling deleteItem ==>");
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new InformationNotFoundException("Category with ID " + itemId + " not found"));
+        Item item = itemRepository.findByIdAndUserId(itemId, getCurrentLoggedInUser().getId());
+
+        if (item == null) throw new InformationNotFoundException("Category with ID " + itemId + " not found");
 
         itemRepository.delete(item);
     }

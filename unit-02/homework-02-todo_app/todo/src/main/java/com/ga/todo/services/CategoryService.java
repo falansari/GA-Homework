@@ -3,8 +3,11 @@ package com.ga.todo.services;
 import com.ga.todo.exceptions.InformationAlreadyExistsException;
 import com.ga.todo.exceptions.InformationNotFoundException;
 import com.ga.todo.models.Category;
+import com.ga.todo.models.User;
 import com.ga.todo.repositories.CategoryRepository;
+import com.ga.todo.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,13 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    public static User getCurrentLoggedInUser() {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        assert userDetails != null;
+        return userDetails.getUser();
+    }
+
     /**
      * Get list of Category objects service.
      * @return List
@@ -25,7 +35,7 @@ public class CategoryService {
     public List<Category> getCategories() {
         System.out.println("Service calling getCategories ==>");
 
-        return categoryRepository.findAll();
+        return categoryRepository.findByUserId(getCurrentLoggedInUser().getId());
     }
 
     /**
@@ -36,11 +46,12 @@ public class CategoryService {
     public Category createCategory(Category object) {
         System.out.println("Service calling createCategory ==>");
 
-        Category category = categoryRepository.findByName(object.getName());
+        Category category = categoryRepository.findByNameAndUserId(object.getName(), getCurrentLoggedInUser().getId());
 
         if (category != null)
             throw new InformationAlreadyExistsException("Category with name " + category.getName() + " already exists.");
 
+        object.setUser(getCurrentLoggedInUser());
         return categoryRepository.save(object);
     }
 
@@ -52,8 +63,11 @@ public class CategoryService {
     public Category getCategory(Long categoryId) {
         System.out.println("Service calling getCategory ==>");
 
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InformationNotFoundException("Category with ID " + categoryId + " not found"));
+        Category category = categoryRepository.findByIdAndUserId(categoryId, getCurrentLoggedInUser().getId());
+
+        if (category == null) throw new InformationNotFoundException("Category with ID " + categoryId + " not found");
+
+        return category;
     }
 
     /**
@@ -65,10 +79,17 @@ public class CategoryService {
     public Category updateCategory(Long categoryId, Category object) {
         System.out.println("Service calling updateCategory ==>");
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InformationNotFoundException("Category with ID " + object.getId() + " not found"));
+        Category category = categoryRepository.findByIdAndUserId(categoryId, getCurrentLoggedInUser().getId());
 
-        if (object.getName() != null) category.setName(object.getName());
+        if (category == null) throw new InformationNotFoundException("Category with ID " + object.getId() + " not found");
+
+        if (object.getName() != null) {
+            Category existingCategory = categoryRepository.findByNameAndUserId(object.getName(), getCurrentLoggedInUser().getId());
+            if (existingCategory != null) throw new InformationAlreadyExistsException("Category with name " + existingCategory.getName() + " already exists");
+
+            category.setName(object.getName());
+        }
+
         if (object.getDescription() != null) category.setDescription(object.getDescription());
         return categoryRepository.save(category);
     }
@@ -80,8 +101,9 @@ public class CategoryService {
     public void deleteCategory(Long categoryId) {
         System.out.println("Service calling deleteCategory ==>");
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InformationNotFoundException("Category with ID " + categoryId + " not found"));
+        Category category = categoryRepository.findByIdAndUserId(categoryId, getCurrentLoggedInUser().getId());
+
+        if (category == null) throw new InformationNotFoundException("Category with ID " + categoryId + " not found");
 
         categoryRepository.delete(category);
     }

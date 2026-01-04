@@ -14,9 +14,18 @@ https://github.com/falansari/GA-Homework/tree/eeddfd5c48bd4945d7c21bfcbfbb3b1553
 ### Controllers
 - Using PATCH requests instead of PUT requests for update functions; this is to allow partially updating a record instead of having to pass in all fields every time.
 - Added an extra getItemsByCategory (all items list in a category) along with getItems (all items in database).
+- Added get all users feature for testing (route: {{BaseUrl}}/auth/users).
+
+### Services
+- Items: Creating duplicate items is allowed as a person can have the same note for different purposes like putting a placeholder note in each category or such.
+- All services
+- Added ability for users to find and update their own profile info, but not delete or create new.
 
 ## What Went Right
+Smooth sailing. Nothing much of note.
 
 ## What Went Wrong: Challenges Faced
+Nothing. It's fairly similar to what we did in class just a slightly different context.
 
 ## Most Enjoyable Task(s)
+It's okay.
