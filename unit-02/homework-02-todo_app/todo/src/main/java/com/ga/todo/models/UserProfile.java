@@ -1,5 +1,6 @@
 package com.ga.todo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,6 +31,10 @@ public class UserProfile {
     @Column
     @Setter
     private String profileDescription;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "userProfile", fetch = FetchType.LAZY)
+    private User user;
 
     @Column
     @CreationTimestamp
