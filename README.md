@@ -23,3 +23,6 @@ https://github.com/falansari/GA-Homework/issues/7
 ## Unit 2
 ### Homework 1: SQL Carmen
 https://github.com/falansari/GA-Homework/issues/13
+
+### Homework 2: Todo App
+https://github.com/falansari/GA-Homework/issues/15
