@@ -26,3 +26,7 @@ https://github.com/falansari/GA-Homework/issues/13
 
 ### Homework 2: Todo App
 https://github.com/falansari/GA-Homework/issues/15
+
+## Unit 3
+### Homework 1: Data Structures Lab
+https://github.com/falansari/GA-Homework/issues/31
