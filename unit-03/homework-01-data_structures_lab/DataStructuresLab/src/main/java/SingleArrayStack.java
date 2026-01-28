@@ -45,4 +45,57 @@ public class SingleArrayStack {
             }
         }
     }
+
+    /**
+     * Return whether an expression's brackets are in correct order with each other or not.
+     * @param expression String
+     * @return boolean
+     */
+    public boolean expressionIsValid(String expression) {
+        for (int i = 0; i < expression.length(); i++) {
+            // Add only acceptable characters { } [ ] ( )
+            switch (expression.charAt(i)) {
+                case '{':
+                case '(':
+                case '[':
+                    this.push(expression.charAt(i)); // Only add opening brackets to stack
+                    break;
+                case '}':
+                case ')':
+                case ']':
+                    // Check if stack's top is a match with the closing bracket or not
+                    if (!bracketsArePair(this, expression.charAt(i))) return false;
+                    break;
+            }
+        }
+
+        return this.isEmpty(); // Valid if stack is empty at the end
+    }
+
+    /**
+     * Compare the current top of the stack to the previous closing character to check for valid pairs.
+     * @param stack SingleArrayStack
+     * @param closingBracket char
+     * @return boolean
+     */
+    public boolean bracketsArePair(SingleArrayStack stack, char closingBracket) {
+        if (stack.isEmpty()) return false; // No matching pair available
+        stack.printStack();
+
+        char openingBracket = stack.pop();
+
+        switch (openingBracket) {
+            case '{':
+                if (closingBracket != '}') return false;
+                break;
+            case '(':
+                if (closingBracket != ')') return false;
+                break;
+            case '[':
+                if (closingBracket != ']') return false;
+                break;
+        }
+
+        return true; // Current match is true.
+    }
 }
